@@ -1,0 +1,33 @@
+#!/usr/bin/perl
+################################################################################
+#                               stomp-wavecal                                  #
+################################################################################
+#                                                                              #
+# DESCRIPTION: Reading a CSV from stdin, outputs it with the wavenumber axis   #
+#              replaced with integral pixel indices.                           #
+#                                                                              #
+# INVOCATION: for i in `ls *.csv` ; do stomp-wavecal < $i > t ; mv t $i ; done #
+#                                                                              #
+################################################################################
+
+my $state = "metadata";
+my $pixel = 0;
+
+while (my $line = <STDIN>)
+{
+    $line =~ s/\s*$//;
+    if ($state eq "metadata")
+    {
+        printf("%s\n", $line);
+        if ($line =~ /Wavenumber,Processed/i)
+        {
+            $state = "data";
+            $pixel = 0;
+        }
+    }
+    elsif ($state eq "data")
+    {
+        my ($wn, $y) = ($line =~ /([-.0-9]+)\s*,\s*([-.0-9]+)/);
+        printf("%d,%.2f\n", $pixel++, $y);
+    }
+}
