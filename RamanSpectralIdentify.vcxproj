@@ -110,6 +110,7 @@
   <ItemGroup>
     <ClInclude Include="src\CSVParser.h" />
     <ClInclude Include="src\Interim.h" />
+    <ClInclude Include="src\save\getopt.h" />
     <ClInclude Include="src\Spectrum.h" />
     <ClInclude Include="src\Util.h" />
   </ItemGroup>
