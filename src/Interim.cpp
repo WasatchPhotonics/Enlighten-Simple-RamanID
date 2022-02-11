@@ -89,9 +89,9 @@ int Identify::Interim::identify(const vector<float>& sample) const
         return -1;
     }
 
-    // Util::log("identify: sample peaks: %s", Util::join(samplePeaks, ", ").c_str());
+    Util::log("identify: sample peaks: %s", Util::join(samplePeaks, ", ").c_str());
 
-    // Util::log("identify: Computing fitness of each library compound");
+    Util::log("identify: Computing fitness of each library compound");
     float bestScore = 0;
     int bestCompound = -1;
     for (int i = 0; i < compoundNames.size(); i++)
@@ -99,22 +99,22 @@ int Identify::Interim::identify(const vector<float>& sample) const
         const string& name = compoundNames.at(i);
         const vector<int>& libraryPeaks = compoundPeaks.at(i);
 
-        // Util::log("identify: computing fitness of %s...", name.c_str());
+        Util::log("identify: computing fitness of %s...", name.c_str());
         float score = checkFit(samplePeaks, libraryPeaks);
 
-        // Util::log("identify: %s score = %.2f", name.c_str(), score);
+        Util::log("identify: %s score = %.2f", name.c_str(), score);
         if (score == 0)
             continue;
 
         if (bestScore < score)
         {
-            // Util::log("identify: bestScore now %.2f", bestScore);
+            Util::log("identify: bestScore now %.2f", bestScore);
             bestScore = score;
             bestCompound = i;
         }
     }
 
-    // Util::log("identify: returning compound %d", bestCompound);
+    Util::log("identify: returning compound %d", bestCompound);
     return bestCompound;    
 }
 

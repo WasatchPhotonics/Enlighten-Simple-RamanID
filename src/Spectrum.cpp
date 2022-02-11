@@ -35,6 +35,6 @@ Identify::Spectrum::Spectrum(const string& pathname_in) :
         wavenumbers = parser.wavenumbers;
         intensities = parser.intensities;
         pixels = wavenumbers.size();
-        // Util::log("loaded %s (%d pixels)", name.c_str(), pixels);
+        Util::log("loaded %s (%d pixels)", name.c_str(), pixels);
     }
 }

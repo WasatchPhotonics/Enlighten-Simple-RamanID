@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 
 using std::string;
 using std::list;
@@ -64,7 +65,6 @@ void usage(const char* progname)
            "    --unknown   output unknown spectral residue\n"
            "    --verbose   include debugging output\n"
            "    --auth      authenticate only\n"
-           "    --interim   use Interim algorithm\n"
            "\n");               
     exit(1);                    
 }                               
@@ -91,7 +91,6 @@ Options parseArgs(int argc, char **argv)
            {"thresh",    required_argument, 0,  0 },
            {"unknown",   no_argument,       0,  0 },
            {"verbose",   no_argument,       0,  0 },
-           {"interim",   no_argument,       0,  0 },
            {"auth",      no_argument,       0,  0 },
            {0,           0,                 0,  0 }
         };
@@ -120,7 +119,6 @@ Options parseArgs(int argc, char **argv)
                 else if (key == "streaming" ) opts.streaming = true;
                 else if (key == "unknown"   ) opts.unknown   = true;
                 else if (key == "verbose"   ) opts.verbose   = true;
-                else if (key == "interim"   ) opts.interim   = true;
                 else if (key == "auth"      ) opts.auth      = true;
             }
         }
@@ -165,27 +163,26 @@ int main(int argc, char** argv)
 
     for (auto& pathname : opts.files)
     {
+        struct stat s;
+        if (stat(pathname, &s) == 0)
+        {
+            if (s.st_mode & S_IFDIR)
+            {
+                Util::log("Skipping directory");
+                continue;
+            }
+        }
         // load the measurement to process
         Identify::Spectrum measurement(pathname);
 
-        if (opts.interim)
-        {
-            int index = interimLibrary.identify(measurement.intensities);
-            if (index >= 0)
-            {
-                const string& name = interimLibrary.getCompoundName(index);
-                printf("Interim: sample %s: matched library %s\n", measurement.name.c_str(), name.c_str());
-            }
-            else
-                printf("Interim: sample %s: NO MATCH\n", measurement.name.c_str());
-        }
-        else
-        {
-            /*
-            Identify::Matches matches = identifyLibrary.process(measurement, opts.thresh);
-            matches.report(measurement.name, opts.brief, opts.alt, opts.unknown);
-            */
-        }
+		int index = interimLibrary.identify(measurement.intensities);
+		if (index >= 0)
+		{
+			const string& name = interimLibrary.getCompoundName(index);
+			printf("Interim: sample %s: matched library %s\n", measurement.name.c_str(), name.c_str());
+		}
+		else
+			printf("Interim: sample %s: NO MATCH\n", measurement.name.c_str());
         
         Util::log("");
     }
