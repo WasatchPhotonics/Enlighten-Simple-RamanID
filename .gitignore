@@ -51,9 +51,13 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-src/identify
-bin/
+# Visual Studio cruft
+.vs/
+x64/Debug/
+x64/Release/
 
+# MacOS
 .DS_Store
 
-.vs/
+src/identify
+bin/
