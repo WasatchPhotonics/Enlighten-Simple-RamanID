@@ -53,6 +53,7 @@ dkms.conf
 
 # Visual Studio cruft
 .vs/
+UpgradeLog.htm
 x64/Debug/
 x64/Release/
 
