@@ -971,15 +971,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:RamanSpectralIdentify"
-        "ProductCode" = "8:{C1B54299-1325-4190-A388-89AACFC02026}"
-        "PackageCode" = "8:{7BE7D9E2-E791-4C39-BB80-3563779D4BF1}"
+        "ProductCode" = "8:{156E9954-D966-48DB-9818-D13C5DD829A5}"
+        "PackageCode" = "8:{C2024490-49F5-4797-AAD9-C7882EF263B4}"
         "UpgradeCode" = "8:{0C7AD06B-D4DF-41E6-964C-A19863F35320}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.2.3"
+        "ProductVersion" = "8:1.0.1"
         "Manufacturer" = "8:Wasatch Photonics"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://wasatchphotonics.com"
@@ -1493,7 +1493,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_149841A1DF9A4156A2ABB2DF497A4132"
             {
-            "SourcePath" = "8:..\\x64\\Debug\\RamanSpectralIdentify.exe"
+            "SourcePath" = "8:..\\Debug\\identify.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_D0B08E85700440AC9A9CEAE05E661520"

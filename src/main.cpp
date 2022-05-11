@@ -21,7 +21,7 @@
 using std::string;
 using std::list;
 
-const char* VERSION = "SimpleID-1.0.1";
+const char* VERSION = "RamanSpectralIdentify-1.0.1";
 
 //! holds parsed command-line options controlling runtime behavior
 struct Options
