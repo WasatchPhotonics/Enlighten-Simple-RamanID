@@ -201,7 +201,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\RamanSpectralIdentify-x.y.z-Setup32.msi"
+        "OutputFilename" = "8:Debug\\RamanIDAlgo-x.y.z-Setup32.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -233,7 +233,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\RamanSpectralIdentify-x.y.z-Setup32.msi"
+        "OutputFilename" = "8:Release\\RamanIDAlgo-x.y.z-Setup32.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -888,30 +888,18 @@
                 {
                 }
             }
-            "{3C67513D-01DD-4637-8A68-80971EB9504F}:_D0B08E85700440AC9A9CEAE05E661520"
+            "{1525181F-901A-416C-8A58-119130FE478E}:_9B24D77688B0461D9E36C645C2BD3DCB"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
-            "Name" = "8:#1925"
+            "Name" = "8:#1918"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
-            "Property" = "8:TARGETDIR"
+            "Property" = "8:PersonalFolder"
                 "Folders"
                 {
-                }
-            }
-            "{1525181F-901A-416C-8A58-119130FE478E}:_F19A2121704642A28566449667F7A8A6"
-            {
-            "Name" = "8:#1915"
-            "AlwaysCreate" = "11:FALSE"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Property" = "8:AppDataFolder"
-                "Folders"
-                {
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_FDB19EF297514092BDF1E5AA315024EF"
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_B37C70E930C44605AB8C72B80D085D74"
                     {
-                    "Name" = "8:RamanSpectralIdentification"
+                    "Name" = "8:Raman ID Algorithm"
                     "AlwaysCreate" = "11:FALSE"
                     "Condition" = "8:"
                     "Transitive" = "11:FALSE"
@@ -955,6 +943,18 @@
                     }
                 }
             }
+            "{3C67513D-01DD-4637-8A68-80971EB9504F}:_D0B08E85700440AC9A9CEAE05E661520"
+            {
+            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "Name" = "8:#1925"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:TARGETDIR"
+                "Folders"
+                {
+                }
+            }
         }
         "LaunchCondition"
         {
@@ -970,10 +970,10 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:RamanSpectralIdentify"
-        "ProductCode" = "8:{156E9954-D966-48DB-9818-D13C5DD829A5}"
-        "PackageCode" = "8:{C2024490-49F5-4797-AAD9-C7882EF263B4}"
-        "UpgradeCode" = "8:{0C7AD06B-D4DF-41E6-964C-A19863F35320}"
+        "ProductName" = "8:Raman ID Algorithm"
+        "ProductCode" = "8:{F96E6293-4FB2-417B-9B3D-3E70CF2EF26C}"
+        "PackageCode" = "8:{AAAC2B7E-C675-48BD-A559-D364E65C04BF}"
+        "UpgradeCode" = "8:{9DFAD6AA-7693-4C3A-8D3E-97F27B6C8B1A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -983,11 +983,11 @@
         "Manufacturer" = "8:Wasatch Photonics"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://wasatchphotonics.com"
-        "Title" = "8:Raman Spectral Identify"
+        "Title" = "8:RamanIDAlgo"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Wasatch Photonics"
         "Keywords" = "8:"
-        "ARPCOMMENTS" = "8:Raman Spectral Identify"
+        "ARPCOMMENTS" = "8:Simple Raman ID algorithm for ENLIGHTEN RamanID plugin"
         "ARPURLINFOABOUT" = "8:https://wasatchphotonics.com"
         "ARPPRODUCTICON" = "8:"
         "ARPIconIndex" = "3:0"
@@ -1493,7 +1493,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_149841A1DF9A4156A2ABB2DF497A4132"
             {
-            "SourcePath" = "8:..\\Debug\\identify.exe"
+            "SourcePath" = "8:..\\Debug\\RamanID.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_D0B08E85700440AC9A9CEAE05E661520"
