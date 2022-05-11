@@ -66,7 +66,7 @@ void Identify::Interim::add(const string& name, const vector<float>& spectrum)
 
 const string& Identify::Interim::getCompoundName(int i) const
 {
-    if (i >= 0 && i < compoundNames.size())
+    if (i >= 0 && i < (int)compoundNames.size())
         return compoundNames.at(i);
     return unknownCompound;
 }
@@ -94,7 +94,7 @@ int Identify::Interim::identify(const vector<float>& sample) const
     Util::log("identify: Computing fitness of each library compound");
     float bestScore = 0;
     int bestCompound = -1;
-    for (int i = 0; i < compoundNames.size(); i++)
+    for (int i = 0; i < (int)compoundNames.size(); i++)
     {
         const string& name = compoundNames.at(i);
         const vector<int>& libraryPeaks = compoundPeaks.at(i);
@@ -139,15 +139,15 @@ float Identify::Interim::checkFit(const vector<int>& samplePeaks, const vector<i
     int sumDist = 0;
     int sumDistPos = 0;
 
-    float possibleScore = 1.0 / libraryPeaks.size();
+    float possibleScore = 1.0f / libraryPeaks.size();
     float totalScore = 0;
-    for (int i = 0; i < libraryPeaks.size(); i++)
+    for (int i = 0; i < (int)libraryPeaks.size(); i++)
     {
         int lp = libraryPeaks[i];
 
         int minDist = absDiff(lp, samplePeaks[0]);
         int bestIndex = 0;
-        for (int j = 1; j < samplePeaks.size(); j++)
+        for (int j = 1; j < (int)samplePeaks.size(); j++)
         {
             int dist = absDiff(lp, samplePeaks[j]);
             if (minDist > dist)
@@ -193,7 +193,7 @@ vector<int> Identify::Interim::findPeakPixels(const vector<float>& spectrum, int
     vector<int> peakPixels;
     int rampLeft = 0;
     float rampBase = spectrum[0];
-    for (int i = 1; i < spectrum.size() - minRampPixels; i++)
+    for (int i = 1; i < (int)spectrum.size() - minRampPixels; i++)
     {
         // is ramp increasing?
         if (spectrum[i] > spectrum[i-1])
@@ -229,9 +229,9 @@ vector<int> Identify::Interim::findPeakPixels(const vector<float>& spectrum, int
 vector<float> Identify::Interim::boxcar(const vector<float>& spectrum, int halfWidth) const
 {
 	vector<float> smoothed(spectrum.size());
-	for (int i = 0; i < spectrum.size(); i++)
+	for (int i = 0; i < (int)spectrum.size(); i++)
     {
-        if (i < halfWidth || i + halfWidth >= spectrum.size())
+        if (i < halfWidth || i + halfWidth >= (int)spectrum.size())
             smoothed[i] = spectrum[i];
         else
         {

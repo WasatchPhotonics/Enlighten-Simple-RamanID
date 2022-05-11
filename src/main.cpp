@@ -5,7 +5,6 @@
 #endif
 
 #include "Spectrum.h"
-//#include "Library.h"
 #include "Interim.h"
 #include "Util.h"
 
@@ -22,7 +21,7 @@
 using std::string;
 using std::list;
 
-const char* VERSION = "Handheld 1.0";
+const char* VERSION = "SimpleID-1.0.1";
 
 //! holds parsed command-line options controlling runtime behavior
 struct Options
@@ -37,13 +36,13 @@ struct Options
     bool streaming = false; //!< read streaming spectra from stdin
     bool interim = false;   //!< use Interim algorithm
     bool auth = false;      //!< authenticate only
-    float thresh = 0.95;    //!< unknown_threshold
+    float thresh = 0.95f;   //!< unknown_threshold
 };
 
 //! display command-line usage
 void usage(const char* progname)
 {
-    printf("%s %s (C) 2021, Wasatch Photonics\n", progname, VERSION);
+    printf("%s %s (C) 2022, Wasatch Photonics\n", progname, VERSION);
     printf("\n");
     printf("Usage: %s [--brief] [--verbose] [--alt] [--unknown] [--thresh frac] [--streaming] --library /path/to/library [sample.csv...]\n", progname);
     printf("       %s --help\n", progname);
@@ -109,7 +108,7 @@ Options parseArgs(int argc, char **argv)
                 if (key == "library")
                     opts.libraryPath = value;
                 else if (key == "thresh")
-                    opts.thresh = atof(value.c_str());
+                    opts.thresh = (float)atof(value.c_str());
             }
             else
             {

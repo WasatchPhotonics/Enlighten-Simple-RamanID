@@ -40,8 +40,8 @@ void Identify::CSVParser::readValues(const vector<string>& tok)
         (len < colIntensity  + 1))
         return;
 
-    float wavenumber = atof(tok[colWavenumber].c_str());
-    float intensity  = atof(tok[colIntensity ].c_str());
+    float wavenumber = (float) atof(tok[colWavenumber].c_str());
+    float intensity  = (float) atof(tok[colIntensity ].c_str());
 
     wavenumbers.push_back(wavenumber);
     intensities.push_back(intensity);

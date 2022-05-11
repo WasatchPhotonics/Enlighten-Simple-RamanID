@@ -98,5 +98,5 @@ Example:
     - free() memory
 
 # History
-- 2022-02-10 1.0.0
-    - initial import
+
+- see [CHANGELOG](README_CHANGELOG.md)
