@@ -4,8 +4,9 @@
 #include <getopt.h>
 #endif
 
+#include "StreamRequestJSON.h"
 #include "Spectrum.h"
-#include "Interim.h"
+#include "Library.h"
 #include "Util.h"
 
 #include <string>
@@ -34,7 +35,6 @@ struct Options
     bool unknown = false;   //!< output unknown residue
     bool verbose = false;   //!< include debug output
     bool streaming = false; //!< read streaming spectra from stdin
-    bool interim = false;   //!< use Interim algorithm
     bool auth = false;      //!< authenticate only
     float thresh = 0.95f;   //!< unknown_threshold
 };
@@ -142,47 +142,86 @@ int main(int argc, char** argv)
 
     Util::logging_enabled = opts.verbose;
 
-    // initialize identification library
-    /*
-    Identify::Library identifyLibrary(opts.libraryPath);
-    if (identifyLibrary.size() < 1)
+    // initialize library
+    Identify::Library library(opts.libraryPath);
+
+    if (opts.streaming)
     {
-        printf("ERROR: unable to instantiate library\n");
-        return -1;
-    }
-    */
+        ////////////////////////////////////////////////////////////////////////
+        // This path is only used from ENLIGHTEN
+        ////////////////////////////////////////////////////////////////////////
 
-    // initialize Interim solution
-    Identify::Interim interimLibrary(opts.libraryPath);
-
-    // process each spectrum
-    Util::log("------------------------------------------");
-    Util::log("Processing input files");
-    Util::log("------------------------------------------");
-
-    for (auto& pathname : opts.files)
-    {
-        struct stat s;
-        if (stat(pathname, &s) == 0)
+        // RamanID plugin checks for line containing "ready" (doesn't have to be in JSON)
+        printf("{ \"Status\": \"ready\" }\n"); 
+        while (true)
         {
-            if (s.st_mode & S_IFDIR)
+            if (std::cin.eof())
+                break;
+
+            try
             {
-                Util::log("Skipping directory");
-                continue;
+                Identify::StreamRequestJSON request(std::cin);
+                if (!request.valid || request.isQuit)
+                {
+                    Util::log("main: bad request (valid %s, isQuit %s)", 
+                        request.valid  ? "true" : "false", 
+                        request.isQuit ? "true" : "false");
+                    break;
+                }
+
+                // original
+                float score = 0;
+                int index = library.identify(measurement.intensities, score);
+                if (index >= 0 && score >= request.min_confidence))
+                {
+                    const string& name = library.getCompoundName(index);
+                    printf("{ \"MatchResult\": [ { \"Name\": \"%s\", \"Score\": %.2f } ] }\n", name.c_str(), score);
+                }
+                else
+                {
+                    printf("{ \"MatchResult\": [ ] }\n");
+                }
+            }
+            catch (std::exception &e)
+            {
+                Util::log("ERROR: exception parsing streamed input: %s", e.what());
+                break;
             }
         }
-        // load the measurement to process
-        Identify::Spectrum measurement(pathname);
+        printf("{ \"Status\": \"done\" }\n"); 
+    }
+    else
+    {
+        // process each spectrum on the cmd-line
+        Util::log("------------------------------------------");
+        Util::log("Processing input files");
+        Util::log("------------------------------------------");
 
-		int index = interimLibrary.identify(measurement.intensities);
-		if (index >= 0)
-		{
-			const string& name = interimLibrary.getCompoundName(index);
-			printf("Interim: sample %s: matched library %s\n", measurement.name.c_str(), name.c_str());
-		}
-		else
-			printf("Interim: sample %s: NO MATCH\n", measurement.name.c_str());
-        
-        Util::log("");
+        for (auto& pathname : opts.files)
+        {
+            struct stat s;
+            if (stat(pathname, &s) == 0)
+            {
+                if (s.st_mode & S_IFDIR)
+                {
+                    Util::log("Skipping directory");
+                    continue;
+                }
+            }
+
+            // load the measurement to process
+            Identify::Spectrum measurement(pathname);
+
+            int index = library.identify(measurement.intensities);
+            if (index >= 0)
+            {
+                const string& name = library.getCompoundName(index);
+                printf("sample %s: matched library %s\n", measurement.name.c_str(), name.c_str());
+            }
+            else
+                printf("sample %s: NO MATCH\n", measurement.name.c_str());
+            
+            Util::log("");
+        }
     }
 }

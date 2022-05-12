@@ -22,8 +22,8 @@ namespace Identify
             //! instantiate an ID-capable Interim library with multiple compounds
             Interim(const std::string& pathname);
 
-            //! return the index of the best-matching compound, if any (neg otherwise)
-            int identify(const std::vector<float>& sample) const;
+            //! return the index and score of the best-matching compound, if any (neg otherwise)
+            int identify(const std::vector<float>& sample, float& score) const;
 
             //! get the requested compound name
             const std::string& getCompoundName(int i) const;

@@ -77,8 +77,19 @@ const string& Identify::Interim::getCompoundName(int i) const
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-int Identify::Interim::identify(const vector<float>& sample) const
+/*! 
+    Compare the passed 'sample' spectrum against the library spectra.  If any 
+    match, return the index of the best-matching library compound and populate
+    'score' with an approximate confidence rating.
+
+    @param score (output) confidence score (higher is better, range 0 .. 1)
+    @returns negative on failure (no match), else best matching compound index
+             (range 0 .. (n-1))
+*/
+int Identify::Interim::identify(const vector<float>& sample, float& score) const
 {
+    score = 0;
+
     auto smoothed = boxcar(sample, BOXCAR_SAMPLE);
     auto samplePeaks = findPeakPixels(smoothed, MIN_RAMP_PIXELS_SAMPLE, MIN_PEAK_HEIGHT_SAMPLE);
 
@@ -100,21 +111,22 @@ int Identify::Interim::identify(const vector<float>& sample) const
         const vector<int>& libraryPeaks = compoundPeaks.at(i);
 
         Util::log("identify: computing fitness of %s...", name.c_str());
-        float score = checkFit(samplePeaks, libraryPeaks);
+        float thisScore = checkFit(samplePeaks, libraryPeaks);
 
-        Util::log("identify: %s score = %.2f", name.c_str(), score);
-        if (score == 0)
+        Util::log("identify: %s thisScore = %.2f", name.c_str(), thisScore);
+        if (thisScore == 0)
             continue;
 
-        if (bestScore < score)
+        if (bestScore < thisScore)
         {
-            Util::log("identify: bestScore now %.2f", bestScore);
-            bestScore = score;
+            Util::log("identify: best score now %.2f", bestScore);
+            bestScore = thisScore;
             bestCompound = i;
         }
     }
 
-    Util::log("identify: returning compound %d", bestCompound);
+    score = bestScore;
+    Util::log("identify: returning compound %d (score %.2f)", bestCompound, score);
     return bestCompound;    
 }
 
