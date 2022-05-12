@@ -16,7 +16,7 @@ Identify::StreamRequestJSON::StreamRequestJSON(istream& is)
 {
     Util::log("instantiating StreamRequestJSON");
     valid = load(is);
-    Util::log("instantiated StreamRequestJSON");
+    Util::log("instantiated StreamRequestJSON (valid %s)", valid ? "yes" : "no");
 }
 
 Identify::StreamRequestJSON::~StreamRequestJSON()
@@ -88,14 +88,16 @@ bool Identify::StreamRequestJSON::load(istream& is)
     for (auto value: wavenumbers_obj)
         spectrum.wavenumbers.push_back(double(value));
 
-    auto len = spectrum.wavenumbers.size();
+    spectrum.pixels = spectrum.wavenumbers.size();
     Util::log("read JSON request with %d wavenumbers (%.2f, %.2f), %d intensities, min_confidence %.2f and max_results %d",
-        len,
-        len > 0 ? spectrum.wavenumbers[  0  ] : -1,
-        len > 0 ? spectrum.wavenumbers[len-1] : -1,
+        spectrum.pixels,
+        spectrum.pixels > 0 ? spectrum.wavenumbers[        0        ] : -1,
+        spectrum.pixels > 0 ? spectrum.wavenumbers[spectrum.pixels-1] : -1,
         spectrum.intensities.size(), 
         min_confidence, 
         max_results);
 
-    return spectrum.isValid();
+    bool ok = spectrum.isValid();
+    Util::log("spectrum valid = %s", ok ? "yes" : "no");
+    return ok;
 }
