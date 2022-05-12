@@ -1,15 +1,6 @@
 #ifndef IDENTIFY_UTIL_H
 #define IDENTIFY_UTIL_H
 
-#ifdef __cplusplus
-extern "C" 
-{
-#endif
-    void log_spectrum(const char *label, int pixels, const float* spectrum);
-#ifdef __cplusplus
-}
-
-
 #include <algorithm> 
 #include <cctype>
 #include <locale>
@@ -36,6 +27,8 @@ class Util
         static void log(const char* format, ...);
         static void pause(const std::string& msg);
         static void log_spectrum(const std::string& label, const std::vector<float>& spectrum);
+        static void set_logfile(const std::string& pathname);
+        static void log_va(const char* fmt, va_list args);
 
         ////////////////////////////////////////////////////////////////////////
         // Files
@@ -142,7 +135,5 @@ class Util
             return s;
         }
 };
-
-#endif // __cplusplus
 
 #endif // IDENTIFY_UTIL_H
