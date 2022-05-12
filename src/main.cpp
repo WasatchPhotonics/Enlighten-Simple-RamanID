@@ -28,6 +28,7 @@ const char* VERSION = "RamanIDAlgo-1.0.1";
 struct Options
 {
     string libraryPath;     //!< directory containing library spectra
+    string logfile;         //!< path to which log should be written
     list<const char*> files;//!< measurements to analyze
     bool help = false;      //!< show help
     bool verbose = false;   //!< include debug output
@@ -39,7 +40,7 @@ void usage(const char* progname)
 {
     printf("%s %s (C) 2022, Wasatch Photonics\n", progname, VERSION);
     printf("\n");
-    printf("Usage: %s [--verbose] [--streaming] --library /path/to/library [sample.csv...]\n", progname);
+    printf("Usage: %s [--verbose] [--streaming] [--logfile path] --library /path/to/library [sample.csv...]\n", progname);
     printf("       %s --help\n", progname);
     printf("\n");
     printf("NOTE:  This version has been modified from the original in the following key respects:\n");
@@ -54,6 +55,7 @@ void usage(const char* progname)
            "Options:\n"
            "    --streaming read streaming spectra from stdin\n"
            "    --verbose   include debugging output\n"
+           "    --logfile   path to log debug messages\n"
            "\n");               
     exit(1);                    
 }                               
@@ -72,11 +74,16 @@ Options parseArgs(int argc, char **argv)
     {
         int option_index = 0;
         static struct option long_options[] = {
-           {"help",      no_argument,       0,  0 },
-           {"library",   required_argument, 0,  0 },
-           {"streaming", no_argument,       0,  0 },
-           {"verbose",   no_argument,       0,  0 },
-           {0,           0,                 0,  0 }
+           {"help",           no_argument,       0,  0 },
+           {"library",        required_argument, 0,  0 },
+           {"logfile",        required_argument, 0,  0 },
+           {"streaming",      no_argument,       0,  0 },
+           {"verbose",        no_argument,       0,  0 },
+
+           // these aren't actually implemented -- required for compatibility with plug-in API
+           {"unknown-thresh", required_argument, 0,  0 },
+
+           {0,                0,                 0,  0 }
         };
 
         // is there no std:: equivalent for this?
@@ -90,8 +97,8 @@ Options parseArgs(int argc, char **argv)
             if (optarg)
             {
                 string value(optarg);
-                if (key == "library")
-                    opts.libraryPath = value;
+                     if (key == "library") opts.libraryPath  = value;
+                else if (key == "logfile") opts.logfile      = value;
             }
             else
             {
@@ -120,6 +127,7 @@ int main(int argc, char** argv)
         usage(argv[0]);
 
     Util::logging_enabled = opts.verbose;
+    Util::set_logfile(opts.logfile);
 
     // initialize library
     Identify::Library library(opts.libraryPath);
