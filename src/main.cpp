@@ -171,8 +171,8 @@ int main(int argc, char** argv)
 
                 // original
                 float score = 0;
-                int index = library.identify(measurement.intensities, score);
-                if (index >= 0 && score >= request.min_confidence))
+                int index = library.identify(request.spectrum.intensities, score);
+                if (index >= 0 && score >= request.min_confidence)
                 {
                     const string& name = library.getCompoundName(index);
                     printf("{ \"MatchResult\": [ { \"Name\": \"%s\", \"Score\": %.2f } ] }\n", name.c_str(), score);
@@ -212,11 +212,12 @@ int main(int argc, char** argv)
             // load the measurement to process
             Identify::Spectrum measurement(pathname);
 
-            int index = library.identify(measurement.intensities);
+            float score = 0;
+            int index = library.identify(measurement.intensities, score);
             if (index >= 0)
             {
                 const string& name = library.getCompoundName(index);
-                printf("sample %s: matched library %s\n", measurement.name.c_str(), name.c_str());
+                printf("sample %s: matched library %s with score %.2f\n", measurement.name.c_str(), name.c_str(), score);
             }
             else
                 printf("sample %s: NO MATCH\n", measurement.name.c_str());

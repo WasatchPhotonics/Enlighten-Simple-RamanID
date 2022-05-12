@@ -1,6 +1,6 @@
 #include <list>
 
-#include "Interim.h"
+#include "Library.h"
 #include "Spectrum.h"
 #include "Util.h"
 
@@ -28,12 +28,7 @@ const string unknownCompound("UNKNOWN");
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-Identify::Interim::Interim(const vector<float>& spectrum)
-{
-    add("default", spectrum);
-}
-
-Identify::Interim::Interim(const string& dir)
+Identify::Library::Library(const string& dir)
 {
     vector<string> filenames = Util::readDir(dir);
     for (auto& filename : filenames)
@@ -46,14 +41,14 @@ Identify::Interim::Interim(const string& dir)
     }
 }
 
-void Identify::Interim::add(const string& name, const vector<float>& spectrum)
+void Identify::Library::add(const string& name, const vector<float>& spectrum)
 {
     auto smoothed = boxcar(spectrum, BOXCAR_LIBRARY);
     auto peakPixels = findPeakPixels(smoothed, MIN_RAMP_PIXELS_LIBRARY, MIN_PEAK_HEIGHT_LIBRARY);
 
     if (peakPixels.size() == 0)
     {
-        // Util::log("Interim::add(%s): no peaks found", name.c_str());
+        // Util::log("Library::add(%s): no peaks found", name.c_str());
         return;
     }
 
@@ -61,10 +56,10 @@ void Identify::Interim::add(const string& name, const vector<float>& spectrum)
     compoundNames.push_back(name);
     compoundPeaks.push_back(peakPixels);
 
-    // Util::log("Interim::add(%s): %s", name.c_str(), Util::join(peakPixels, ", ").c_str());
+    // Util::log("Library::add(%s): %s", name.c_str(), Util::join(peakPixels, ", ").c_str());
 }
 
-const string& Identify::Interim::getCompoundName(int i) const
+const string& Identify::Library::getCompoundName(int i) const
 {
     if (i >= 0 && i < (int)compoundNames.size())
         return compoundNames.at(i);
@@ -86,7 +81,7 @@ const string& Identify::Interim::getCompoundName(int i) const
     @returns negative on failure (no match), else best matching compound index
              (range 0 .. (n-1))
 */
-int Identify::Interim::identify(const vector<float>& sample, float& score) const
+int Identify::Library::identify(const vector<float>& sample, float& score) const
 {
     score = 0;
 
@@ -133,7 +128,7 @@ int Identify::Interim::identify(const vector<float>& sample, float& score) const
 inline int absDiff(int a, int b) { return a < b ? b - a : a - b; }
 
 //! @returns goodness of fit between two lists of peaks (normalized to range (0, 1), 1 being best)
-float Identify::Interim::checkFit(const vector<int>& samplePeaks, const vector<int>& libraryPeaks) const
+float Identify::Library::checkFit(const vector<int>& samplePeaks, const vector<int>& libraryPeaks) const
 {
     if (libraryPeaks.size() == 0)
     {
@@ -200,7 +195,7 @@ float Identify::Interim::checkFit(const vector<int>& samplePeaks, const vector<i
 // we're defining a peak as one which is the highest for at least MIN_RAMP_PIXELS
 // in either direction, as well as MIN_PEAK_HEIGHT counts above the left-hand
 // ramp shoulder.
-vector<int> Identify::Interim::findPeakPixels(const vector<float>& spectrum, int minRampPixels, int minPeakHeight) const
+vector<int> Identify::Library::findPeakPixels(const vector<float>& spectrum, int minRampPixels, int minPeakHeight) const
 {
     vector<int> peakPixels;
     int rampLeft = 0;
@@ -238,7 +233,7 @@ vector<int> Identify::Interim::findPeakPixels(const vector<float>& spectrum, int
     return peakPixels;
 }
 
-vector<float> Identify::Interim::boxcar(const vector<float>& spectrum, int halfWidth) const
+vector<float> Identify::Library::boxcar(const vector<float>& spectrum, int halfWidth) const
 {
 	vector<float> smoothed(spectrum.size());
 	for (int i = 0; i < (int)spectrum.size(); i++)

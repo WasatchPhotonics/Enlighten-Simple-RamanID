@@ -1,5 +1,5 @@
-#ifndef IDENTIFY_INTERIM_H
-#define IDENTIFY_INTERIM_H
+#ifndef IDENTIFY_LIBRARY_H
+#define IDENTIFY_LIBRARY_H
 
 #include <map>
 #include <vector>
@@ -7,20 +7,12 @@
 
 namespace Identify
 {
-    /**
-    * @brief    An interim, simpler matching 
-    *           for early system testing on limited-resource STM32F405 micro-
-    *           processors.
-    */
-    class Interim
+    //! A deliberately simple, naive Raman identification algorithm.
+    class Library 
     {
         public:
-
-            //! instantiate an "authenticate-only" Interim library with one compound
-            Interim(const std::vector<float>& spectrum);
-
-            //! instantiate an ID-capable Interim library with multiple compounds
-            Interim(const std::string& pathname);
+            //! instantiate a Llibrary with multiple compounds
+            Library(const std::string& pathname);
 
             //! return the index and score of the best-matching compound, if any (neg otherwise)
             int identify(const std::vector<float>& sample, float& score) const;
@@ -35,7 +27,6 @@ namespace Identify
             std::vector<int>   findPeakPixels(const std::vector<float>& spectrum, int minRampWidth, int minPeakHeight) const;
             std::vector<float> boxcar        (const std::vector<float>& spectrum, int halfWidth) const;
 
-            // std::map<const std::string, const std::vector<int>> compoundPeaksByName;
             std::vector<std::string> compoundNames;
             std::vector<std::vector<int>>  compoundPeaks;
     };

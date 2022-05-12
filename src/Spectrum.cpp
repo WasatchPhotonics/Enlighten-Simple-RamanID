@@ -1,27 +1,15 @@
 #include "Spectrum.h"
 
 #include "CSVParser.h"
-//#include "Interpolator.h"
 #include "Util.h"
 
-#include <iostream>
-#include <exception>
-
-using std::vector;
 using std::string;
-using std::istream;
-using std::runtime_error;
 
-/*
-Identify::Spectrum::Spectrum(
-        const vector<float>& wavenumbers_in, 
-        const vector<float>& intensities_in) 
-    : wavenumbers(wavenumbers_in),
-      intensities(intensities_in)
+Identify::Spectrum::Spectrum()
 {
-    pixels = intensities.size();
+    name = "no-name";
+    pixels = 0;
 }
-*/
 
 //! load a spectrum from a CSV file (requires comma delimitors)
 Identify::Spectrum::Spectrum(const string& pathname_in) :
@@ -37,4 +25,13 @@ Identify::Spectrum::Spectrum(const string& pathname_in) :
         pixels = wavenumbers.size();
         Util::log("loaded %s (%d pixels)", name.c_str(), pixels);
     }
+}
+
+bool Identify::Spectrum::isValid()
+{
+    if (pixels != wavenumbers.size())
+        return false;
+    if (wavenumbers.size() != intensities.size())
+        return false;
+    return true;
 }

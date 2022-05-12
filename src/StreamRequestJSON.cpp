@@ -1,6 +1,5 @@
 #include "StreamRequestJSON.h"
 
-#include "common.h"
 #include "Util.h"
 
 #include "simdjson.h"
