@@ -72,7 +72,7 @@ const string& Identify::Library::getCompoundName(int i) const
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-/*! 
+/**
     Compare the passed 'sample' spectrum against the library spectra.  If any 
     match, return the index of the best-matching library compound and populate
     'score' with an approximate confidence rating.

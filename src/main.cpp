@@ -29,14 +29,9 @@ struct Options
 {
     string libraryPath;     //!< directory containing library spectra
     list<const char*> files;//!< measurements to analyze
-    bool alt = false;       //!< output alternates
-    bool brief = false;     //!< output on one line
     bool help = false;      //!< show help
-    bool unknown = false;   //!< output unknown residue
     bool verbose = false;   //!< include debug output
     bool streaming = false; //!< read streaming spectra from stdin
-    bool auth = false;      //!< authenticate only
-    float thresh = 0.95f;   //!< unknown_threshold
 };
 
 //! display command-line usage
@@ -44,7 +39,7 @@ void usage(const char* progname)
 {
     printf("%s %s (C) 2022, Wasatch Photonics\n", progname, VERSION);
     printf("\n");
-    printf("Usage: %s [--brief] [--verbose] [--alt] [--unknown] [--thresh frac] [--streaming] --library /path/to/library [sample.csv...]\n", progname);
+    printf("Usage: %s [--verbose] [--streaming] --library /path/to/library [sample.csv...]\n", progname);
     printf("       %s --help\n", progname);
     printf("\n");
     printf("NOTE:  This version has been modified from the original in the following key respects:\n");
@@ -57,13 +52,8 @@ void usage(const char* progname)
     printf("Example: %s --library libraries/WP-785 data/WP-785/*.csv\n", progname);
     printf("\n"
            "Options:\n"
-           "    --alt       output match 'alternates'\n"
-           "    --brief     output results on one line per sample\n"
            "    --streaming read streaming spectra from stdin\n"
-           "    --thresh    unknown threshold (default 0.95)\n"
-           "    --unknown   output unknown spectral residue\n"
            "    --verbose   include debugging output\n"
-           "    --auth      authenticate only\n"
            "\n");               
     exit(1);                    
 }                               
@@ -82,15 +72,10 @@ Options parseArgs(int argc, char **argv)
     {
         int option_index = 0;
         static struct option long_options[] = {
-           {"alt",       no_argument,       0,  0 },
-           {"brief",     no_argument,       0,  0 },
            {"help",      no_argument,       0,  0 },
            {"library",   required_argument, 0,  0 },
            {"streaming", no_argument,       0,  0 },
-           {"thresh",    required_argument, 0,  0 },
-           {"unknown",   no_argument,       0,  0 },
            {"verbose",   no_argument,       0,  0 },
-           {"auth",      no_argument,       0,  0 },
            {0,           0,                 0,  0 }
         };
 
@@ -107,18 +92,12 @@ Options parseArgs(int argc, char **argv)
                 string value(optarg);
                 if (key == "library")
                     opts.libraryPath = value;
-                else if (key == "thresh")
-                    opts.thresh = (float)atof(value.c_str());
             }
             else
             {
-                     if (key == "alt"       ) opts.alt       = true;
-                else if (key == "brief"     ) opts.brief     = true;
-                else if (key == "help"      ) opts.help      = true;
+                     if (key == "help"      ) opts.help      = true;
                 else if (key == "streaming" ) opts.streaming = true;
-                else if (key == "unknown"   ) opts.unknown   = true;
                 else if (key == "verbose"   ) opts.verbose   = true;
-                else if (key == "auth"      ) opts.auth      = true;
             }
         }
     }
