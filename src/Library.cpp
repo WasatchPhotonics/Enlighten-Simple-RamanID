@@ -114,9 +114,9 @@ int Identify::Library::identify(const vector<float>& sample, float& score) const
 
         if (bestScore < thisScore)
         {
-            Util::log("identify: best score now %.2f", bestScore);
             bestScore = thisScore;
             bestCompound = i;
+            Util::log("identify: best score now %.2f (best compound %i)", bestScore, bestCompound);
         }
     }
 
@@ -127,18 +127,18 @@ int Identify::Library::identify(const vector<float>& sample, float& score) const
 
 inline int absDiff(int a, int b) { return a < b ? b - a : a - b; }
 
-//! @returns goodness of fit between two lists of peaks (normalized to range (0, 1), 1 being best)
+//! @returns goodness of fit between two lists of peaks (normalized to range (0, 100), 100 being best)
 float Identify::Library::checkFit(const vector<int>& samplePeaks, const vector<int>& libraryPeaks) const
 {
     if (libraryPeaks.size() == 0)
     {
-        // Util::log("checkFit: library compound has no peaks");
+        Util::log("checkFit: library compound has no peaks");
         return 0;
     }
 
     if (samplePeaks.size() < libraryPeaks.size())
     {
-        // Util::log("checkFit: sample has too few peaks (%d < %d)", samplePeaks.size(), libraryPeaks.size());
+        Util::log("checkFit: sample has too few peaks (%d < %d)", samplePeaks.size(), libraryPeaks.size());
         return 0;
     }
 
@@ -146,7 +146,7 @@ float Identify::Library::checkFit(const vector<int>& samplePeaks, const vector<i
     int sumDist = 0;
     int sumDistPos = 0;
 
-    float possibleScore = 1.0f / libraryPeaks.size();
+    float possibleScore = 100.0f / libraryPeaks.size();
     float totalScore = 0;
     for (int i = 0; i < (int)libraryPeaks.size(); i++)
     {
@@ -167,11 +167,11 @@ float Identify::Library::checkFit(const vector<int>& samplePeaks, const vector<i
 
         int sp = samplePeaks[bestIndex];
         int dist = lp - sp;
-        // Util::log("checkFit: best fit for library peak #%2d (pixel %4d) is sample peak #%2d (pixel %4d) for dist %4d", i, lp, bestIndex, sp, dist);
+        Util::log("checkFit: best fit for library peak #%2d (pixel %4d) is sample peak #%2d (pixel %4d) for dist %4d", i, lp, bestIndex, sp, dist);
 
         if (minDist > MAX_PIXEL_OFFSET)
         {
-            // Util::log("checkFit: unable to associate library peak %d with any sample peak (minDist %d > thresh %d)", minDist, MAX_PIXEL_OFFSET);
+            Util::log("checkFit: unable to associate library peak %d with any sample peak (minDist %d > thresh %d)", minDist, MAX_PIXEL_OFFSET);
             return 0;
         }
 
@@ -181,14 +181,14 @@ float Identify::Library::checkFit(const vector<int>& samplePeaks, const vector<i
         float peakScore = possibleScore * (1.f - 1.f * minDist / MAX_PIXEL_OFFSET);
         totalScore += peakScore;
 
-        // Util::log("checkFit: peakScore %8.2f (total %8.2f)", peakScore, totalScore);
+        Util::log("checkFit: peakScore %8.2f (total %8.2f)", peakScore, totalScore);
     }
 
     // float avgDist    = 1.0 * sumDist    / libraryPeaks.size();
     // float avgDistPos = 1.0 * sumDistPos / libraryPeaks.size();
     // Util::log("checkFit: sumDist %8d avgDist %8.2f sumDistPos %8d avgDistPos %8.2f", sumDist, avgDist, sumDistPos, avgDistPos);
 
-    // Util::log("checkFit: returning totalScore %.2f", totalScore);
+    Util::log("checkFit: returning totalScore %.2f", totalScore);
     return totalScore;
 }
 
