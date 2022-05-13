@@ -93,6 +93,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_6298FC06A367B4E3F5E332AF2F627ED3"
+        "OwnerKey" = "8:_149841A1DF9A4156A2ABB2DF497A4132"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_6F5A76B000AD4E90BE650A0011D07758"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -101,6 +107,12 @@
         {
         "MsmKey" = "8:_715A2DD69FAB402DA41E59F6311B302C"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_72DDCB651C2425CC4345B4809D9DE3AE"
+        "OwnerKey" = "8:_149841A1DF9A4156A2ABB2DF497A4132"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -155,6 +167,12 @@
         {
         "MsmKey" = "8:_D6BE6FC801084E0DB9543B8030AB3B01"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_DBEC12F8FE13BD8308E374A133DE5497"
+        "OwnerKey" = "8:_149841A1DF9A4156A2ABB2DF497A4132"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -520,6 +538,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6298FC06A367B4E3F5E332AF2F627ED3"
+            {
+            "SourcePath" = "8:ucrtbased.dll"
+            "TargetName" = "8:ucrtbased.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_D0B08E85700440AC9A9CEAE05E661520"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6F5A76B000AD4E90BE650A0011D07758"
             {
             "SourcePath" = "8:..\\libraries\\WP-785\\Cyclohexane.csv"
@@ -558,6 +596,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_72DDCB651C2425CC4345B4809D9DE3AE"
+            {
+            "SourcePath" = "8:VCRUNTIME140D.dll"
+            "TargetName" = "8:VCRUNTIME140D.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_D0B08E85700440AC9A9CEAE05E661520"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_790ACA8A8A1E40E1AAA93B20BB62F74E"
@@ -738,6 +796,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DBEC12F8FE13BD8308E374A133DE5497"
+            {
+            "SourcePath" = "8:MSVCP140D.dll"
+            "TargetName" = "8:MSVCP140D.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_D0B08E85700440AC9A9CEAE05E661520"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DCF53F36EEB04EEC95CF04D2E6793453"
@@ -971,15 +1049,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Raman ID Algorithm"
-        "ProductCode" = "8:{12383F1A-29AC-4A39-AAE6-B74A27BFF22B}"
-        "PackageCode" = "8:{8F423A29-81B0-4BA8-ADFD-D1773089BC9D}"
+        "ProductCode" = "8:{965481F3-803D-4787-888A-AADBC44354D1}"
+        "PackageCode" = "8:{8B693F09-3B47-47C9-B3F4-6F4933CC7957}"
         "UpgradeCode" = "8:{9DFAD6AA-7693-4C3A-8D3E-97F27B6C8B1A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.1.0"
+        "ProductVersion" = "8:1.2.0"
         "Manufacturer" = "8:Wasatch Photonics"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://wasatchphotonics.com"
