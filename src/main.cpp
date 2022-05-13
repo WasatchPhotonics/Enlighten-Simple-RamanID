@@ -22,7 +22,7 @@
 using std::string;
 using std::list;
 
-const char* VERSION = "RamanIDAlgo-1.1.0";
+const char* VERSION = "RamanIDAlgo-1.2.0";
 
 //! holds parsed command-line options controlling runtime behavior
 struct Options
