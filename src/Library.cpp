@@ -150,8 +150,9 @@ float Identify::Library::checkFit(const vector<float>& samplePeaks, const vector
 
         if (minDist > MAX_WAVENUMBER_OFFSET)
         {
-            Util::log("checkFit: unable to associate library peak %d with any sample peak (minDist %.2f > thresh %d)", minDist, MAX_WAVENUMBER_OFFSET);
-            return 0;
+            Util::log("checkFit: unable to associate library peak %d with any sample peak (minDist %.2f > thresh %d)", i, minDist, MAX_WAVENUMBER_OFFSET);
+            // return 0;
+            continue;
         }
 
         float peakScore = possibleScore * (1.f - 1.f * minDist / MAX_WAVENUMBER_OFFSET);
