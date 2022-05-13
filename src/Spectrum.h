@@ -18,6 +18,8 @@ namespace Identify
             std::vector<float> wavenumbers;
             std::vector<float> intensities;
 
+            float getIntensityAtWavenumber(float wavenumber) const;
+
         public:
             //! used by StreamRequestJSON
             Spectrum(); 

@@ -102,28 +102,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\CSVParser.cpp" />
-    <ClCompile Include="src\Library.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\simdjson.cpp" />
-    <ClCompile Include="src\Spectrum.cpp" />
-    <ClCompile Include="src\StreamRequest.cpp" />
-    <ClCompile Include="src\StreamRequestJSON.cpp" />
-    <ClCompile Include="src\Util.cpp" />
+    <ClCompile Include="LibrarySpectrum.cpp" />
+    <ClCompile Include="CSVParser.cpp" />
+    <ClCompile Include="Library.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="simdjson.cpp" />
+    <ClCompile Include="Spectrum.cpp" />
+    <ClCompile Include="StreamRequest.cpp" />
+    <ClCompile Include="StreamRequestJSON.cpp" />
+    <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\CSVParser.h" />
-    <ClInclude Include="src\Library.h" />
-    <ClInclude Include="src\save\getopt.h" />
-    <ClInclude Include="src\simdjson.h" />
-    <ClInclude Include="src\Spectrum.h" />
-    <ClInclude Include="src\StreamRequest.h" />
-    <ClInclude Include="src\StreamRequestJSON.h" />
-    <ClInclude Include="src\Util.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="README.md" />
-    <None Include="src\Makefile" />
+    <ClInclude Include="LibrarySpectrum.h" />
+    <ClInclude Include="CSVParser.h" />
+    <ClInclude Include="Library.h" />
+    <ClInclude Include="save\getopt.h" />
+    <ClInclude Include="simdjson.h" />
+    <ClInclude Include="Spectrum.h" />
+    <ClInclude Include="StreamRequest.h" />
+    <ClInclude Include="StreamRequestJSON.h" />
+    <ClInclude Include="Util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -158,16 +158,11 @@ int main(int argc, char** argv)
 
                 // original
                 float score = 0;
-                int index = library.identify(request.spectrum.intensities, score);
-                if (index >= 0 && score >= request.min_confidence)
-                {
-                    const string& name = library.getCompoundName(index);
+                string name = library.identify(request.spectrum, score);
+                if (name.size() >= 0 && score >= request.min_confidence)
                     printf("{ \"MatchResult\": [ { \"Name\": \"%s\", \"Score\": %.2f } ] }\n", name.c_str(), score);
-                }
                 else
-                {
                     printf("{ \"MatchResult\": [ ] }\n");
-                }
             }
             catch (std::exception &e)
             {
@@ -200,12 +195,9 @@ int main(int argc, char** argv)
             Identify::Spectrum measurement(pathname);
 
             float score = 0;
-            int index = library.identify(measurement.intensities, score);
-            if (index >= 0)
-            {
-                const string& name = library.getCompoundName(index);
+            string name = library.identify(measurement, score);
+            if (name.size() > 0)
                 printf("sample %s: matched library %s with score %.2f\n", measurement.name.c_str(), name.c_str(), score);
-            }
             else
                 printf("sample %s: NO MATCH\n", measurement.name.c_str());
             

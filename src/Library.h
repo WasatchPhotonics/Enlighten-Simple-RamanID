@@ -5,6 +5,9 @@
 #include <vector>
 #include <string>
 
+#include "Spectrum.h"
+#include "LibrarySpectrum.h"
+
 namespace Identify
 {
     //! A deliberately simple, naive Raman identification algorithm.
@@ -14,21 +17,17 @@ namespace Identify
             //! instantiate a Llibrary with multiple compounds
             Library(const std::string& pathname);
 
-            //! return the index and score of the best-matching compound, if any (neg otherwise)
-            int identify(const std::vector<float>& sample, float& score) const;
-
-            //! get the requested compound name
-            const std::string& getCompoundName(int i) const;
+            //! return the name and score of the best-matching compound, if any (neg otherwise)
+            std::string identify(const Identify::Spectrum& sample, float& score) const;
 
         private:
-            void add(const std::string& name, const std::vector<float>& spectrum);
-            float checkFit(const std::vector<int>& samplePeaks, const std::vector<int>& libraryPeaks) const;
+            void add(const Identify::Spectrum& spectrum);
+            float checkFit(const std::vector<float>& samplePeaks, const std::vector<float>& libraryPeaks) const;
 
-            std::vector<int>   findPeakPixels(const std::vector<float>& spectrum, int minRampWidth, int minPeakHeight) const;
-            std::vector<float> boxcar        (const std::vector<float>& spectrum, int halfWidth) const;
+            std::vector<float> findPeakWavenumbers(const Identify::Spectrum& spectrum, int boxcar, int minRampWidth, int minPeakHeight) const;
+            std::vector<float> boxcar(const std::vector<float>& spectrum, int halfWidth) const;
 
-            std::vector<std::string> compoundNames;
-            std::vector<std::vector<int>>  compoundPeaks;
+            std::map<std::string, std::vector<float>> libraryPeakWavenumbers;
     };
 }
 
