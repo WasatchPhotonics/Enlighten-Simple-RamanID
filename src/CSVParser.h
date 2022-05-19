@@ -11,11 +11,12 @@ namespace Identify
         public:
             // methods
             CSVParser(const std::string& pathname);
+            std::string getName() const;
+            bool isValid() const;
 
             // attributes
             std::vector<float> wavenumbers;
             std::vector<float> intensities;
-            bool valid = false;
 
         private:
             // methods
@@ -26,10 +27,11 @@ namespace Identify
             void readValues(const std::vector<std::string>& tok);
 
             // attributes
-            // std::string state;
-            int colWavenumber = 0; // guessing...update if
-            int colIntensity  = 1; //   we learn otherwise
-
+            bool valid = false;
+            std::string pathname;
+            std::string label;
+            int colWavenumber = 0; // initial defaults (dynamically
+            int colIntensity  = 1; // overwritten if header row found)
     };
 }
 

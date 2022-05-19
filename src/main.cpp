@@ -4,9 +4,9 @@
 #include <getopt.h>
 #endif
 
+#include "StreamRequestJSON.h"
 #include "Spectrum.h"
-//#include "Library.h"
-#include "Interim.h"
+#include "Library.h"
 #include "Util.h"
 
 #include <string>
@@ -22,30 +22,25 @@
 using std::string;
 using std::list;
 
-const char* VERSION = "Handheld 1.0";
+const char* VERSION = "RamanIDAlgo-1.2.0";
 
 //! holds parsed command-line options controlling runtime behavior
 struct Options
 {
     string libraryPath;     //!< directory containing library spectra
+    string logfile;         //!< path to which log should be written
     list<const char*> files;//!< measurements to analyze
-    bool alt = false;       //!< output alternates
-    bool brief = false;     //!< output on one line
     bool help = false;      //!< show help
-    bool unknown = false;   //!< output unknown residue
     bool verbose = false;   //!< include debug output
     bool streaming = false; //!< read streaming spectra from stdin
-    bool interim = false;   //!< use Interim algorithm
-    bool auth = false;      //!< authenticate only
-    float thresh = 0.95;    //!< unknown_threshold
 };
 
 //! display command-line usage
 void usage(const char* progname)
 {
-    printf("%s %s (C) 2021, Wasatch Photonics\n", progname, VERSION);
+    printf("%s %s (C) 2022, Wasatch Photonics\n", progname, VERSION);
     printf("\n");
-    printf("Usage: %s [--brief] [--verbose] [--alt] [--unknown] [--thresh frac] [--streaming] --library /path/to/library [sample.csv...]\n", progname);
+    printf("Usage: %s [--verbose] [--streaming] [--logfile path] --library /path/to/library [sample.csv...]\n", progname);
     printf("       %s --help\n", progname);
     printf("\n");
     printf("NOTE:  This version has been modified from the original in the following key respects:\n");
@@ -58,13 +53,9 @@ void usage(const char* progname)
     printf("Example: %s --library libraries/WP-785 data/WP-785/*.csv\n", progname);
     printf("\n"
            "Options:\n"
-           "    --alt       output match 'alternates'\n"
-           "    --brief     output results on one line per sample\n"
            "    --streaming read streaming spectra from stdin\n"
-           "    --thresh    unknown threshold (default 0.95)\n"
-           "    --unknown   output unknown spectral residue\n"
            "    --verbose   include debugging output\n"
-           "    --auth      authenticate only\n"
+           "    --logfile   path to log debug messages\n"
            "\n");               
     exit(1);                    
 }                               
@@ -83,16 +74,16 @@ Options parseArgs(int argc, char **argv)
     {
         int option_index = 0;
         static struct option long_options[] = {
-           {"alt",       no_argument,       0,  0 },
-           {"brief",     no_argument,       0,  0 },
-           {"help",      no_argument,       0,  0 },
-           {"library",   required_argument, 0,  0 },
-           {"streaming", no_argument,       0,  0 },
-           {"thresh",    required_argument, 0,  0 },
-           {"unknown",   no_argument,       0,  0 },
-           {"verbose",   no_argument,       0,  0 },
-           {"auth",      no_argument,       0,  0 },
-           {0,           0,                 0,  0 }
+           {"help",           no_argument,       0,  0 },
+           {"library",        required_argument, 0,  0 },
+           {"logfile",        required_argument, 0,  0 },
+           {"streaming",      no_argument,       0,  0 },
+           {"verbose",        no_argument,       0,  0 },
+
+           // these aren't actually implemented -- required for compatibility with plug-in API
+           {"unknown-thresh", required_argument, 0,  0 },
+
+           {0,                0,                 0,  0 }
         };
 
         // is there no std:: equivalent for this?
@@ -106,20 +97,14 @@ Options parseArgs(int argc, char **argv)
             if (optarg)
             {
                 string value(optarg);
-                if (key == "library")
-                    opts.libraryPath = value;
-                else if (key == "thresh")
-                    opts.thresh = atof(value.c_str());
+                     if (key == "library") opts.libraryPath  = value;
+                else if (key == "logfile") opts.logfile      = value;
             }
             else
             {
-                     if (key == "alt"       ) opts.alt       = true;
-                else if (key == "brief"     ) opts.brief     = true;
-                else if (key == "help"      ) opts.help      = true;
+                     if (key == "help"      ) opts.help      = true;
                 else if (key == "streaming" ) opts.streaming = true;
-                else if (key == "unknown"   ) opts.unknown   = true;
                 else if (key == "verbose"   ) opts.verbose   = true;
-                else if (key == "auth"      ) opts.auth      = true;
             }
         }
     }
@@ -142,48 +127,81 @@ int main(int argc, char** argv)
         usage(argv[0]);
 
     Util::logging_enabled = opts.verbose;
+    Util::set_logfile(opts.logfile);
 
-    // initialize identification library
-    /*
-    Identify::Library identifyLibrary(opts.libraryPath);
-    if (identifyLibrary.size() < 1)
+    // initialize library
+    Identify::Library library(opts.libraryPath);
+
+    if (opts.streaming)
     {
-        printf("ERROR: unable to instantiate library\n");
-        return -1;
-    }
-    */
+        ////////////////////////////////////////////////////////////////////////
+        // This path is only used from ENLIGHTEN
+        ////////////////////////////////////////////////////////////////////////
 
-    // initialize Interim solution
-    Identify::Interim interimLibrary(opts.libraryPath);
-
-    // process each spectrum
-    Util::log("------------------------------------------");
-    Util::log("Processing input files");
-    Util::log("------------------------------------------");
-
-    for (auto& pathname : opts.files)
-    {
-        struct stat s;
-        if (stat(pathname, &s) == 0)
+        // RamanID plugin checks for line containing "ready" (doesn't have to be in JSON)
+        printf("{ \"Status\": \"ready\" }\n"); 
+        while (true)
         {
-            if (s.st_mode & S_IFDIR)
+            if (std::cin.eof())
+                break;
+
+            try
             {
-                Util::log("Skipping directory");
-                continue;
+                Identify::StreamRequestJSON request(std::cin);
+                if (!request.valid || request.isQuit)
+                {
+                    Util::log("main: bad request (valid %s, isQuit %s)", 
+                        request.valid  ? "true" : "false", 
+                        request.isQuit ? "true" : "false");
+                    break;
+                }
+
+                // original
+                float score = 0;
+                string name = library.identify(request.spectrum, score);
+                if (name.size() >= 0 && score >= request.min_confidence)
+                    printf("{ \"MatchResult\": [ { \"Name\": \"%s\", \"Score\": %.2f } ] }\n", name.c_str(), score);
+                else
+                    printf("{ \"MatchResult\": [ ] }\n");
+            }
+            catch (std::exception &e)
+            {
+                Util::log("ERROR: exception parsing streamed input: %s", e.what());
+                break;
             }
         }
-        // load the measurement to process
-        Identify::Spectrum measurement(pathname);
+        printf("{ \"Status\": \"done\" }\n"); 
+    }
+    else
+    {
+        // process each spectrum on the cmd-line
+        Util::log("------------------------------------------");
+        Util::log("Processing input files");
+        Util::log("------------------------------------------");
 
-		int index = interimLibrary.identify(measurement.intensities);
-		if (index >= 0)
-		{
-			const string& name = interimLibrary.getCompoundName(index);
-			printf("Interim: sample %s: matched library %s\n", measurement.name.c_str(), name.c_str());
-		}
-		else
-			printf("Interim: sample %s: NO MATCH\n", measurement.name.c_str());
-        
-        Util::log("");
+        for (auto& pathname : opts.files)
+        {
+            struct stat s;
+            if (stat(pathname, &s) == 0)
+            {
+                if (s.st_mode & S_IFDIR)
+                {
+                    Util::log("Skipping directory");
+                    continue;
+                }
+            }
+
+            // load the measurement to process
+            Identify::Spectrum measurement(pathname);
+
+            float score = 0;
+            string name = library.identify(measurement, score);
+            if (name.size() > 0)
+                printf("sample %s: matched library %s with score %.2f\n", measurement.name.c_str(), name.c_str(), score);
+            else
+                printf("sample %s: NO MATCH\n", measurement.name.c_str());
+            
+            Util::log("");
+        }
     }
 }

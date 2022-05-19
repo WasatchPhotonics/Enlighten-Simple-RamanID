@@ -10,7 +10,21 @@ using std::string;
 
 Identify::CSVParser::CSVParser(const string& pathname)
 {
+    this->pathname = pathname;
     valid = parse(pathname);    
+}
+
+//! @todo could clean-up pathname a little (remove .csv etc)
+string Identify::CSVParser::getName() const
+{
+    if (label.size() > 0)
+        return label;
+    return pathname;
+}
+
+bool Identify::CSVParser::isValid() const
+{
+    return valid;
 }
 
 bool Identify::CSVParser::isNum(const string& line) const
@@ -40,8 +54,8 @@ void Identify::CSVParser::readValues(const vector<string>& tok)
         (len < colIntensity  + 1))
         return;
 
-    float wavenumber = atof(tok[colWavenumber].c_str());
-    float intensity  = atof(tok[colIntensity ].c_str());
+    float wavenumber = (float) atof(tok[colWavenumber].c_str());
+    float intensity  = (float) atof(tok[colIntensity ].c_str());
 
     wavenumbers.push_back(wavenumber);
     intensities.push_back(intensity);
@@ -86,7 +100,14 @@ bool Identify::CSVParser::parse(const string& pathname)
             }
             else
             {
-                // ignore metadata (for now)
+                // parse metadata -- the only field we're using right now is "Label"
+                if (tok.size() > 1)
+                {
+                    if (Util::toLower(tok[0]) == "label")
+                    {
+                        label = tok[1];
+                    }
+                }
             }
         }
         else if (state == READING_HEADER)

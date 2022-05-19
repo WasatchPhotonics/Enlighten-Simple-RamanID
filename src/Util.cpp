@@ -20,6 +20,7 @@ using std::stringstream;
 using std::regex_search;
 
 bool Util::logging_enabled = false;
+static FILE* logfile = stdout;
 
 string Util::join(const vector<float>& v, const string& delim)
 {
@@ -88,19 +89,10 @@ void Util::log(const char* fmt, ...)
     if (!logging_enabled)
         return;
 
-    time_t now = time(NULL);
-    string(ts) = ctime(&now);
-    ts[ts.length() - 1] = 0;
-    printf("DEBUG: %s ", ts.c_str());
-
     va_list args;
     va_start(args, fmt);
-    vprintf(fmt, args);
+    Util::log_va(fmt, args);
     va_end(args);
-
-    printf("\n");
-
-    fflush(stdout);
 }
 
 void Util::log_spectrum(const string& label, const vector<float>& spectrum)
@@ -109,6 +101,29 @@ void Util::log_spectrum(const string& label, const vector<float>& spectrum)
         return;
 
     Util::log("DEBUG: %s, %s", label.c_str(), Util::join(spectrum, ", ").c_str());
+}
+
+void Util::log_va(const char* fmt, va_list args)
+{
+    time_t now = time(NULL);
+    string(ts) = ctime(&now);
+    ts[ts.length() - 1] = 0;
+
+    fprintf(logfile, "DEBUG: %s ", ts.c_str());
+    vfprintf(logfile, fmt, args);
+    fprintf(logfile, "\n");
+    fflush(logfile);
+}
+
+void Util::set_logfile(const string& pathname)
+{
+    if (pathname.size() == 0)
+    {
+        logfile = stdout;
+        return;
+    }
+    logfile = fopen(pathname.c_str(), "w");
+    log("logging to: %s", pathname.c_str());
 }
 
 /**

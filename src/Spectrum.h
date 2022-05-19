@@ -10,7 +10,7 @@ namespace Identify
     class Spectrum
     {
         public:
-            int pixels = 1024;
+            int pixels;
 
             std::string pathname;
             std::string name;
@@ -18,17 +18,16 @@ namespace Identify
             std::vector<float> wavenumbers;
             std::vector<float> intensities;
 
+            float getIntensityAtWavenumber(float wavenumber) const;
+
+        public:
+            //! used by StreamRequestJSON
+            Spectrum(); 
+
             //! instantiate a spectrum from a CSV file containing (wavenumber, intensity) pairs
             Spectrum(const std::string& pathname);
 
-            // Spectrum(const std::vector<float>& wavenumbers_in, 
-            //          const std::vector<float>& intensities_in);
-
-            //! interpolate a spectrum using the defined range of wavenumbers
-            // Spectrum interpolate(float start, float end, float incr) const;
-
-            //! interpolate a spectrum using the given set of wavenumbers
-            // Spectrum interpolate(const std::vector<float>& wavenumbers) const;
+            bool isValid();
     };
 }
 
