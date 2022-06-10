@@ -1,6 +1,30 @@
 # Overview
 
-This provides an algorithm to identify spectra
+This is a deliberately-simple algorithm and sample library for performing
+Raman identification.
+
+It is provided as a demonstration of how an external application can be
+called from Wasatch Photonics [ENLIGHTEN™](https://wasatchphotonics.com/product-category/software/)
+using the ENLIGHTEN™ plug-in architecture.
+
+In particular, it is the "external application" counterpart of ENLIGHTEN™'s
+RamanID plug-in, whose source can be found here, and which is included in
+the ENLIGHTEN™ distribution:
+
+- https://github.com/WasatchPhotonics/ENLIGHTEN/tree/main/pluginExamples/Raman
+
+Therefore, although you can test this "application" on its own from
+the command-line (see [Testing](#Testing), below), it is really intended to
+be installed alongside ENLIGHTEN™ and called from the RamanID plugin.
+
+It cannot be overemphasized that _this is not a "good" Raman ID algorithm._
+It is provided to demonstrate how an ENLIGHTEN™ user can create their own
+plugins, even plugins which communicate with external applications at run-time.
+
+More-advanced Raman ID algorithms, with improved "smarts" and accuracy, may be
+added to ENLIGHTEN™ over time, whether as plugins or integrated features, 
+public or private, but that is beyond the remit and capabilities of this GitHub 
+project.
 
 # Contents
 
@@ -34,6 +58,28 @@ C++ project, and currently build on Windows using Visual Studio Community Editio
 
 You can therefore build this project on Windows by double-clicking the .sln file
 and compiling under Visual Studio.
+
+# Design
+
+The basic goal of this application was to allow the "spectral library" to be
+nothing more than a folder of spectra saved from ENLIGHTEN™ as individual .CSV 
+files. 
+
+This makes it extremely simple for users to generate their own "Raman library"
+simply by creating a folder and dragging "known-good" spectra into it. Only one
+spectrum is required (or supported) per compound.  Compound names are taken from
+the "Label" field of the CSV, or filename if that metadata is not provided.
+By way of demonstration, sample libraries are included in the libraries/ folder.
+
+The algorithm does nothing more than compare peak locations on the x-axis. Peak
+intensity (relative or absolute) is not factored in the comparison.
+
+Given the above, the peak-finding algorithm in use becomes of paramount importance
+-- and the peak-finding routine in this application is simple indeed. All the math
+can be found in \ref Identify::Library, especially:
+
+- \ref Identify::Library::findPeakWavenumbers
+- \ref Identify::Library::checkFit
 
 # Testing
 
@@ -88,14 +134,16 @@ Example:
     Interim: sample Isopropanol2mmHDPE: matched library 2mmHDPE
     Interim: sample Isopropanol4mmHDPE: matched library 2mmHDPE
 
-
 # Backlog
 
-- cache interpolated library between streamed spectra, only re-interpolate if 
-  length or first/last wavenumber change
-- C cleanup
-    - initialize all variables
-    - free() memory
+A more accurate algorithm might consider some low-hanging opportunities for 
+improvement:
+
+- interpolate library spectra to match the sample measurement's x-axis
+  (the current design avoids this by only comparing the x-coordinate of peak 
+   centroids)
+- generate a Pearson correlation coefficient between the sample measurement 
+  and each interpolated library spectrum.
 
 # History
 
